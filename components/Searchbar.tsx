@@ -70,7 +70,7 @@ const Searchbar = () => {
         className="searchbar-btn"
         disabled={searchPrompt === ""}
       >
-        {isLoading ? "Searchong..." : "Search"}
+        {isLoading ? "Searching..." : "Search"}
       </button>
     </form>
   );
