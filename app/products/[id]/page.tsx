@@ -1,5 +1,6 @@
 import PriceInfoCard from "@/components/PriceInfoCard";
-import { getProductById } from "@/lib/actions";
+import ProductCard from "@/components/ProductCard";
+import { getProductById, getSimilarProducts } from "@/lib/actions";
 import { formatNumber } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,6 +14,8 @@ const ProductDetails = async ({ params: { id } }: Props) => {
   const product = await getProductById(id);
 
   if (!product) redirect("/");
+
+  const similarProducts = await getSimilarProducts(id);
 
   return (
     <div className="product-container">
@@ -73,7 +76,6 @@ const ProductDetails = async ({ params: { id } }: Props) => {
               </div>
             </div>
           </div>
-
           <div className="product-info">
             <div className="flex flex-col gap-2">
               <p className="text-[34px] text-secondary font-bold">
@@ -118,7 +120,6 @@ const ProductDetails = async ({ params: { id } }: Props) => {
               </p>
             </div>
           </div>
-
           <div className="my-7 flex flex-col gap-5">
             <div className="flex gap-5 flex-wrap">
               <PriceInfoCard
@@ -128,7 +129,6 @@ const ProductDetails = async ({ params: { id } }: Props) => {
                   product.currentPrice
                 )}`}
               />
-
               <PriceInfoCard
                 title="Average Price"
                 iconSrc="/assets/icons/chart.svg"
@@ -152,8 +152,48 @@ const ProductDetails = async ({ params: { id } }: Props) => {
               />
             </div>
           </div>
+          Modal
         </div>
       </div>
+
+      <div className="flex flex-col gap-16 border-2 border-red-500">
+        <div className="flex flex-col gap-5">
+          <h3 className="text-2xl text-secondary font-semibold">
+            Product Description
+          </h3>
+
+          <div className="flex flex-col gap-4">
+            {product?.description?.split("\n")}
+          </div>
+        </div>
+
+        <button className="btn w-fit mx-auto flex items-center justify-center gap-3 min-w-[200px]">
+          <Image
+            src="/assets/icons/bag.svg"
+            alt="check"
+            width={22}
+            height={22}
+          />
+
+          <Link href="/" className="text-bas text-white">
+            Buy Now
+          </Link>
+        </button>
+      </div>
+
+      {/* check if similar product exist */}
+      {similarProducts && similarProducts?.length > 0 && (
+        <div className="py-14 flex flex-col gap-2 w-full">
+          <p className="section-text">Similar Product</p>
+
+          <div className="flex flex-wrap gap-10 mt-7 w-full">
+            {/* render similar product */}
+            {similarProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

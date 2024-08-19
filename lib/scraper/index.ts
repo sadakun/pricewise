@@ -1,3 +1,5 @@
+"use server";
+
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { extractCurrency, extractDescription, extractPrice } from "../utils";
@@ -33,16 +35,18 @@ export async function scrapeAmazonProduct(url: string) {
     const currentPrice = extractPrice(
       $(".priceToPay span.a-price-whole"),
       $(".a.size.base.a-color-price"),
-      $(".a-button-selected .a-color-base"),
+      $(".a-button-selected .a-color-base")
       // $(".a-price.a-text-price"),
-      $(".a-price.a-text-price.a-size-medium.apexPriceToPay")
+      // $(".a-price.a-text-price.a-size-medium.apexPriceToPay")
     );
 
     const originalPrice = extractPrice(
-      // $("#priceblock_ourprice"),
-      // $(".a-price.a-text-price span.a-offscreen"),
-      // $("#priceblock_dealprice"),
-      $(".a-price.a-text-price.a-size-base")
+      $("#priceblock_ourprice"),
+      $(".a-price.a-text-price span.a-offscreen"),
+      $("#listPrice"),
+      $("#priceblock_dealprice"),
+      $(".a-size-base.a-color-price")
+      // $(".a-price.a-text-price.a-size-base")
     );
 
     const outOfStock =
@@ -93,7 +97,7 @@ export async function scrapeAmazonProduct(url: string) {
       averagePrice: Number(currentPrice) || Number(originalPrice),
     };
 
-    // console.log(data);
+    console.log(data);
     return data;
   } catch (error: any) {
     throw new Error("Failed to scrape product: ${error.message}");
