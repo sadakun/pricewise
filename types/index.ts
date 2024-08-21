@@ -27,7 +27,7 @@ export type Product = {
   users?: User[];
 };
 
-export type Notification =
+export type NotificationType =
   | "WELCOME"
   | "CHANGE_OF_STOCK"
   | "LOWEST_PRICE"
